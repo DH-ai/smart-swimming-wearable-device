@@ -146,7 +146,7 @@ The exact speed value must be chosen after we see the Kaggle data. If the data
 already has lap labels, use them instead and compare them with the automatic
 lap count.
 
-## Example Python code
+## Example Python code ( the example code is in python becuase if it would be in C++ things would be easier )
 
 This is an example, not the final program. It shows the main calculations in
 simple code. It expects a CSV with the four columns listed above. Install
@@ -247,11 +247,8 @@ else:
 
 When the data is available, submit:
 
-1. The Python file or notebook.
-2. One table with all 20 measurements for each swimming session.
+1. The C++ file .
+2. One table with all 20 measurements for each swimming session, we have only 1.
 3. A small lap table: lap number, lap time, lap distance, and average speed.
 4. A short note explaining the chosen active-speed value and any problems in
    the data.
-
-Do not hide missing values or bad data. If a value cannot be calculated, write
-`N/A` and say why.
