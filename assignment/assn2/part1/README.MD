@@ -149,15 +149,23 @@ lap count.
 ## Example Python code ( the example code is in python becuase if it would be in C++ things would be easier )
 
 This is an example, not the final program. It shows the main calculations in
-simple code. It expects a CSV with the four columns listed above. Install
-`pandas` and `numpy` when you are ready to run it.
+simple code. The temporary generator creates a no-header text file with six
+space-separated values per line: `timestamp ax ay az lap_id is_swimming`.
+ If you want to test the below code and get a feel for it install `pandas` and `numpy` when you are ready to run it.
 
 ```python
 import numpy as np
 import pandas as pd
 
-# Load the data. Rename Kaggle columns here if their names are different.
-df = pd.read_csv("imu_data.csv")
+# Load temporary text data. There is no header line in this file.
+df = pd.read_csv(
+    "synthetic_swimming_data.txt",
+    sep=r"\s+",
+    header=None,
+    names=["timestamp", "ax", "ay", "az", "lap_id", "is_swimming"],
+)
+# For a later Kaggle CSV, use this instead:
+# df = pd.read_csv("imu_data.csv")
 df = df.sort_values("timestamp").dropna()
 
 # Time between two sensor readings.

@@ -3,22 +3,26 @@
 Run from this folder:
     python temp.py
 
-The script writes synthetic_imu_data.csv beside this file.  The data has four
-25 m laps, short rests between laps, a small left/right movement, and slower
-later laps.  It is only for testing the Part 1 calculations until a usable
-Kaggle dataset is available.
+The script writes synthetic_swimming_data.txt beside this file. Like the
+project's swimming_data.txt file, it has no header and uses spaces between
+values. Each line is:
+
+    timestamp ax ay az lap_id is_swimming
+
+The data has four 25 m laps, short rests between laps, a small left/right
+movement, and slower later laps. It is only for testing the Part 1
+calculations until a usable Kaggle dataset is available.
 """
 
 from __future__ import annotations
 
 import argparse
-import csv
 import math
 import random
 from pathlib import Path
 
 
-DEFAULT_OUTPUT = Path(__file__).with_name("synthetic_imu_data.csv")
+DEFAULT_OUTPUT = Path(__file__).with_name("synthetic_swimming_data.txt")
 
 
 def add_rest(rows: list[dict[str, float | int]], time_s: float, rest_s: float, dt: float, rng: random.Random) -> float:
@@ -100,7 +104,7 @@ def generate_data(
     sample_time_s: float = 0.05,
     seed: int = 42,
 ) -> int:
-    """Create the CSV file and return the number of rows written."""
+    """Create the text file and return the number of rows written."""
     if laps < 1:
         raise ValueError("laps must be at least 1")
     if lane_length_m <= 0 or first_lap_time_s <= 0 or sample_time_s <= 0:
@@ -127,13 +131,12 @@ def generate_data(
             time_s = add_rest(rows, time_s, rest_between_laps_s, sample_time_s, rng)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with output_path.open("w", newline="", encoding="utf-8") as data_file:
-        writer = csv.DictWriter(
-            data_file,
-            fieldnames=["timestamp", "ax", "ay", "az", "lap_id", "is_swimming"],
-        )
-        writer.writeheader()
-        writer.writerows(rows)
+    with output_path.open("w", encoding="utf-8") as data_file:
+        for row in rows:
+            data_file.write(
+                f"{row['timestamp']:.2f} {row['ax']:.5f} {row['ay']:.5f} "
+                f"{row['az']:.5f} {row['lap_id']} {row['is_swimming']}\n"
+            )
 
     return len(rows)
 
@@ -144,7 +147,7 @@ def main() -> None:
         "--output",
         type=Path,
         default=DEFAULT_OUTPUT,
-        help=f"CSV file to create (default: {DEFAULT_OUTPUT.name})",
+        help=f"Text file to create (default: {DEFAULT_OUTPUT.name})",
     )
     parser.add_argument("--laps", type=int, default=4, help="Number of laps (default: 4)")
     parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
@@ -152,7 +155,7 @@ def main() -> None:
 
     row_count = generate_data(args.output, laps=args.laps, seed=args.seed)
     print(f"Created {args.output} with {row_count} rows.")
-    print("Columns: timestamp, ax, ay, az, lap_id, is_swimming")
+    print("Columns: timestamp ax ay az lap_id is_swimming")
 
 
 if __name__ == "__main__":
