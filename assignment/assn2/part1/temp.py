@@ -157,6 +157,5 @@ def main() -> None:
     print(f"Created {args.output} with {row_count} rows.")
     print("Columns: timestamp ax ay az lap_id is_swimming")
 
-
 if __name__ == "__main__":
     main()
