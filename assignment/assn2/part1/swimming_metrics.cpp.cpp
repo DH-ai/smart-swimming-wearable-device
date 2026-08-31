@@ -69,7 +69,7 @@ int main() {
     vector<double> time, ax, ay, az;
     vector<int> lapIdGiven, isSwimGiven; // read only for the sanity check at the end
 
-    ifstream file("swimming_data.txt");
+    ifstream file("synthetic_swimming_data.txt");
     if (!file) {
         cout << "Error: Could not open swimming_data.txt!" << endl;
         return 1;
